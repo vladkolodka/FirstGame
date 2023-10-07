@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
@@ -60,21 +61,21 @@ public partial class Main : Node
 	{
 		// Create a new instance of the Mob scene.
 		var mob = EnemyTemplate.Instantiate<Enemy>();
-
+		
 		// Choose a random location on Path2D.
 		var mobSpawnLocation = GetNode<PathFollow2D>("MobPath/MobSpawnLocation");
-		mobSpawnLocation.ProgressRatio = GD.Randf();
-
+		mobSpawnLocation.ProgressRatio = Math.Max(0.001f, GD.Randf());
+		
 		// Set the mob's direction perpendicular to the path direction.
-		float direction = mobSpawnLocation.RotationDegrees + 90;
-
+		var direction = mobSpawnLocation.RotationDegrees + 90;
+		
 		// Set the mob's position to a random location.
 		mob.Position = mobSpawnLocation.Position;
-
+		
 		// Add some randomness to the direction.
 		direction += GD.RandRange(-45, 45);
 		mob.RotationDegrees = direction;
-
+		
 		// Choose the velocity.
 		var velocity = new Vector2((float) GD.RandRange(150.0, 350.0), 0);
 		

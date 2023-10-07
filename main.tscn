@@ -29,11 +29,12 @@ wait_time = 0.4
 [node name="ScoreTimer" type="Timer" parent="."]
 
 [node name="MobPath" type="Path2D" parent="."]
-scale = Vector2(0.504132, 0.502793)
+scale = Vector2(1.002, 1.00125)
 curve = SubResource("Curve2D_ipn6h")
 
 [node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
-position = Vector2(-0.172119, 0)
+position = Vector2(0.771052, 0)
+progress = 1.0
 
 [node name="Player" parent="." instance=ExtResource("2_ishu2")]
 Speed = 500
