@@ -19,6 +19,9 @@ public partial class Main : Node
 	private Player _player;
 	private CanvasLayerScript _hud;
 
+	private AudioStreamPlayer _mainSoundPlayer;
+	private AudioStreamPlayer _deathPlayer;
+
 	public override void _Ready()
 	{
 		_startingPosition = GetNode<Marker2D>("StartingPositionMarker2D");
@@ -26,6 +29,9 @@ public partial class Main : Node
 		_mobTimer = GetNode<Timer>("MobTimer");
 		_startTimer = GetNode<Timer>("StartTimer");
 		_player = GetNode<Player>("Player");
+
+		_mainSoundPlayer = GetNode<AudioStreamPlayer>("MainSoundPlayer");
+		_deathPlayer = GetNode<AudioStreamPlayer>("DeathPlayer");
 
 		_hud = GetNode<CanvasLayerScript>("CanvasLayer");
 		
@@ -89,6 +95,9 @@ public partial class Main : Node
 	{
 		_scoreTimer.Stop();
 		_mobTimer.Stop();
+		_mainSoundPlayer.Stop();
+		
+		_deathPlayer.Play();
 		
 		GetTree().CallGroup("enemies", Node.MethodName.QueueFree);
 		foreach (var node in GetChildren().Where(n => n is Enemy))
@@ -104,6 +113,8 @@ public partial class Main : Node
 	{
 		_hud.UpdateScore(_score);
 		_hud.ShowMessage("Get Ready!");
+
+		_mainSoundPlayer.Play();
 		
 		_scoreTimer.Start();
 		_startTimer.Start();
