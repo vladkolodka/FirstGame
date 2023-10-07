@@ -1,8 +1,97 @@
-[gd_scene load_steps=2 format=3 uid="uid://cyn382h4bhytb"]
+[gd_scene load_steps=7 format=3 uid="uid://c6vpt3fdg1nsr"]
 
-[ext_resource type="PackedScene" uid="uid://c15orjbj3tpd7" path="res://scenes/player.tscn" id="1_jppwa"]
+[ext_resource type="Script" path="res://scripts/Main.cs" id="1_p0vm1"]
+[ext_resource type="PackedScene" uid="uid://c15orjbj3tpd7" path="res://scenes/player.tscn" id="2_ishu2"]
+[ext_resource type="PackedScene" uid="uid://bauc6n4mji637" path="res://scenes/enemy.tscn" id="3_mewb6"]
+[ext_resource type="FontFile" uid="uid://dg6pe8ghrj54k" path="res://fonts/Xolonium-Regular.ttf" id="4_hwpw8"]
+[ext_resource type="Script" path="res://scripts/CanvasLayerScript.cs" id="4_u3not"]
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="Curve2D" id="Curve2D_ipn6h"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 960, 0, 0, 0, 0, 0, 968, 1432, 0, 0, 0, 0, 0, 1432, 0, 0, 0, 0, 0, 0)
+}
+point_count = 6
 
-[node name="Player" parent="." instance=ExtResource("1_jppwa")]
-position = Vector2(69, 63)
+[node name="Main" type="Node"]
+script = ExtResource("1_p0vm1")
+EnemyTemplate = ExtResource("3_mewb6")
+
+[node name="StartingPositionMarker2D" type="Marker2D" parent="."]
+position = Vector2(240, 360)
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="MobTimer" type="Timer" parent="."]
+wait_time = 0.4
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="MobPath" type="Path2D" parent="."]
+scale = Vector2(0.504132, 0.502793)
+curve = SubResource("Curve2D_ipn6h")
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+position = Vector2(-0.172119, 0)
+
+[node name="Player" parent="." instance=ExtResource("2_ishu2")]
+Speed = 500
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("4_u3not")
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.476562
+anchor_right = 0.523438
+anchor_bottom = 0.05625
+grow_horizontal = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("4_hwpw8")
+theme_override_font_sizes/font_size = 64
+metadata/_edit_use_anchors_ = true
+
+[node name="MessageLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -36.5
+offset_right = 20.0
+offset_bottom = 36.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("4_hwpw8")
+theme_override_font_sizes/font_size = 60
+text = "Dodge The
+Creeps!"
+horizontal_alignment = 1
+
+[node name="StartButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -152.0
+offset_right = 100.0
+offset_bottom = -52.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Start"
+
+[node name="MessageTimer" type="Timer" parent="CanvasLayer"]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="StartTimer" to="." method="_OnStartTimerTimeout"]
+[connection signal="timeout" from="MobTimer" to="." method="_onMobTimerTimeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_OnScoreTimerTimeout"]
+[connection signal="Hit" from="Player" to="." method="_OnPlayerHit"]
+[connection signal="pressed" from="CanvasLayer/StartButton" to="CanvasLayer" method="_onStartButtonPressed"]
+[connection signal="timeout" from="CanvasLayer/MessageTimer" to="CanvasLayer" method="_OnMessageTimerTimeout"]

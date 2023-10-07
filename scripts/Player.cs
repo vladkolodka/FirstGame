@@ -1,5 +1,7 @@
 using Godot;
 
+namespace FirstGame.scripts;
+
 public partial class Player : Area2D
 {
 	[Export] 
@@ -18,7 +20,7 @@ public partial class Player : Area2D
 		_animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 		
-		// Hide();
+		Hide();
 	}
 
 	public override void _Process(double delta)
@@ -76,17 +78,19 @@ public partial class Player : Area2D
 	{
 		Position = position;
 		_collisionShape.Disabled = false;
+
+		_animatedSprite.Animation = "walk";
+		_animatedSprite.FlipH = false;
+		_animatedSprite.FlipV = false;
+		
 		Show();
 	}
 	
 	private void _OnBodyEntered(Node2D body)
 	{
-		Hide();
 		EmitSignal(SignalName.Hit);
+		Hide();
 		
-		// _collisionShape.Disabled = true; // TODO try
 		_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 	}
 }
-
-
